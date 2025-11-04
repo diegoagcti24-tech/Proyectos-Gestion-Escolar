@@ -1,0 +1,58 @@
+<%- include('header.ejs') %> 
+
+<main class="flex-grow-1">
+    <div class="container mt-5">
+        <h1 class="mb-4">Gestor de Bases de Datos</h1>
+
+        <% if (error) { %>
+            <div class="alert alert-danger" role="alert">
+                Error al procesar la solicitud: <%= error %>
+            </div>
+        <% } %>
+
+        <div class="card mb-4">
+            <div class="card-header">Crear Nueva Base de Datos</div>
+            <div class="card-body">
+                <form action="/create_database" method="POST">
+                    <div class="input-group">
+                        <input type="text" name="db_name" class="form-control" placeholder="Nombre de la nueva base de datos" required>
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <h2 class="mb-3">Bases de Datos Creadas</h2>
+        <ul class="list-group">
+            <% if (databases && databases.length) { %> 
+                <% databases.forEach(function(db) { %>
+                    <% 
+                        // Obtener el nombre de la DB. En Mongo, es 'Database'. 
+                        const dbName = db.Database;
+                        
+                        // OMITIR la lista de exclusión:
+                        // En MongoDB, solo se listan las que están en la colección maestra,
+                        // lo que simplifica y elimina la necesidad de la lista larga de exclusión de MySQL.
+                    %>
+                    
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <%= dbName %> 
+                        <div>
+                            <a href="/databases/<%= dbName %>" class="btn btn-info btn-sm me-2">Crear Tablas</a>
+
+                            <form action="/delete_database/<%= dbName %>" method="POST" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar esta base de datos? Esto no se puede deshacer.')">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                <% }); %>
+            <% } else { %>
+                <li class="list-group-item">No se encontraron bases de datos.</li>
+            <% } %>
+        </ul>
+    </div>
+</main>
+
+<%- include('footer.ejs') %>

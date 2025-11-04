@@ -1,0 +1,53 @@
+<%- include('header.ejs') %> 
+<main class="flex-grow-1">
+    <div class="container mt-5">
+        <h1 class="mb-4">Datos de la Tabla: <span class="text-info"><%= table_name %></span></h1>
+        
+        <p>En la Base de Datos: <span class="text-info"><%= db_name %></span></p>
+
+        <a href="/databases/<%= db_name %>" class="btn btn-secondary mb-3">← Volver a Tablas</a>
+
+        <a href="/databases/<%= db_name %>/<%= table_name %>/add_data" class="btn btn-success mb-3">Agregar Datos</a>
+
+        <div class="table-responsive mt-3">
+            <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <% columns.forEach(function(column) { %> 
+                            <th><%= column %></th>
+                        <% }); %>
+                        <th>Acciones</th> 
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (records && records.length) { %>  <% records.forEach(function(row) { %>  <tr>
+                                <% row.forEach(function(value) { %>
+                                    <td><%= value %></td>
+                                <% }); %>
+                                <td>
+                                    <% const id_value = row[0]; %> 
+                                    
+                                    <a href="/databases/<%= db_name %>/<%= table_name %>/edit_data/<%= id_value %>" class="btn btn-primary btn-sm me-2">Editar</a>
+                                    
+                                    <form action="/databases/<%= db_name %>/<%= table_name %>/delete_data/<%= id_value %>" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar este registro? Esto no se puede deshacer.')">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    <% } else { %> 
+                        <tr>
+                            <td colspan="<%= columns.length + 1 %>" class="text-center">
+                                <div class="alert alert-warning m-0" role="alert">
+                                    La tabla '<%= table_name %>' no contiene datos.
+                                </div>
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<%- include('footer.ejs') %>

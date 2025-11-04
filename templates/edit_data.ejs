@@ -1,0 +1,40 @@
+<%- include('header.ejs') %>
+
+<main class="flex-grow-1">
+    <div class="container mt-5">
+        <h1 class="mb-4">Editar Documento</h1>
+
+        <p>Base de Datos: <span class="text-info"><%= db_name %></span> | Colección: <span class="text-info"><%= table_name %></span></p>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                Formulario de Edición para ID: <strong><%= record._id %></strong>
+            </div>
+            <div class="card-body">
+                <form action="/databases/<%= db_name %>/<%= table_name %>/edit_data/<%= record._id %>" method="post">
+                    
+                    <input type="hidden" name="_id" value="<%= record._id %>">
+
+                    <% columns.forEach(function(column) { %>
+                        <div class="mb-3">
+                            <label for="<%= column %>" class="form-label"><%= column %>:</label>
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                id="<%= column %>" 
+                                name="<%= column %>" 
+                                value="<%= record[column] %>" 
+                                required
+                            >
+                        </div>
+                    <% }); %>
+                    
+                    <a href="/databases/<%= db_name %>/<%= table_name %>" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('footer.ejs') %>

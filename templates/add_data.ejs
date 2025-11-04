@@ -1,0 +1,40 @@
+<%- include('header.ejs') %> <main class="flex-grow-1">
+
+    <div class="container mt-5">
+
+                <h1 class="mb-4">Agregar Datos a la Tabla: <span class="text-info"><%= table_name %></span></h1>
+
+                <p>En la Base de Datos: <span class="text-info"><%= db_name %></span></p>
+
+                <p><a href="/databases/<%= db_name %>/<%= table_name %>" class="btn btn-secondary">← Volver a la Tabla</a></p>
+
+                <div class="card mb-4">
+
+            <div class="card-header">Formulario de Inserción</div>
+
+            <div class="card-body">
+
+                                <form action="/databases/<%= db_name %>/<%= table_name %>/add_data" method="post">
+
+                                        <% columns.forEach(function(column) { %>
+                        <div class="mb-3">
+                                                        <label for="<%= column %>" class="form-label"><%= column %></label>
+
+                                                        <% if (column === 'Cantidad') { %>
+                                <input type="number" class="form-control" id="<%= column %>" name="<%= column %>" required>
+                            <% } else { %>
+                                                                <input type="text" class="form-control" id="<%= column %>" name="<%= column %>" required>
+                            <% } %>
+                        </div>
+                    <% }); %>
+
+                                        <button type="submit" class="btn btn-primary mt-3">Guardar Datos</button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('footer.ejs') %> ```

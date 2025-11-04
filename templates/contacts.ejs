@@ -1,0 +1,55 @@
+<%- include('header.ejs') %>
+
+<main class="flex-grow-1">
+    <div class="container mt-5">
+        <h1 class="mb-5 text-center text-primary">Equipo de Desarrollo</h1>
+        <p class="lead text-center mb-5">Conoce a los programadores detrás de este Sistema de Gestión de Bases de Datos.</p>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center">
+            
+            <% if (typeof programmers !== 'undefined' && programmers && programmers.length) { %>
+            <% programmers.forEach(function(programmer) { %>
+            <div class="col">
+                <div class="card h-100 shadow-lg border-0">
+                    
+                    <!-- Imagen de Perfil -->
+                    <div class="d-flex justify-content-center pt-4">
+                        <img 
+                            src="<%= programmer.image_url %>" 
+                            class="card-img-top rounded-circle shadow-sm" 
+                            alt="Foto de <%= programmer.name %>" 
+                            style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #0d6efd;"
+                            onerror="this.onerror=null; this.src='/static/usuario.png';"
+                        >
+                    </div>
+
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold mt-2"><%= programmer.name %></h5>
+                        <h6 class="card-subtitle mb-2 text-muted"><%= programmer.role %></h6>
+                        
+                        <!-- Contacto -->
+                        <ul class="list-unstyled mt-3">
+                            <li>
+                                <i class="bi bi-envelope-fill me-2 text-secondary"></i>
+                                <a href="mailto:<%= programmer.email %>" class="text-decoration-none"><%= programmer.email %></a>
+                            </li>
+                            <!-- Puedes agregar más datos como teléfono o GitHub si los incluyes en server.js -->
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <% }); %>
+            <% } else { %>
+                <p class="text-center text-muted col-12">No hay información de desarrolladores disponible.</p>
+            <% } %>
+
+        </div>
+        
+        <div class="text-center mt-5 pt-4">
+             <a href="/" class="btn btn-lg btn-info shadow">Volver al Inicio</a>
+        </div>
+    </div>
+</main>
+
+<%- include('footer.ejs') %>

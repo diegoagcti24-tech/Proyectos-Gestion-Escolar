@@ -1,0 +1,259 @@
+<!-- tables.ejs - Página de Gestión de Tablas -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablas de la Base de Datos</title>
+    <!-- Incluir Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- CSS Personalizado para fondo oscuro y colores -->
+    <link rel="stylesheet" href="/static/colores.css"> 
+    <style>
+        /* Estilos generales para el fondo y la tipografía */
+        body {
+            background-color: #2f2f2f;
+            color: #fff;
+        }
+        /* Contenedor principal para centrar el contenido y aplicar espaciado */
+        .container-fluid {
+            padding-top: 20px;
+            max-width: 1200px; /* Limitar el ancho máximo */
+        }
+        /* Estilos de las tarjetas/contenedores de las secciones */
+        .card-dark {
+            background-color: #3f3f3f; /* Fondo de tarjeta más claro que el body */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        /* Estilo para el input de número de columnas */
+        #numColumnsInput {
+            background-color: #4f4f4f;
+            color: #fff;
+            border: 1px solid #666;
+        }
+        /* Estilo para los formularios generados (si existen) */
+        #columnFormContainer .form-control {
+            background-color: #4f4f4f;
+            color: #fff;
+            border: 1px solid #666;
+            margin-bottom: 10px;
+        }
+        /* Título de la sección de tablas */
+        h3 {
+            color: #03ff9e; /* Color de acento para títulos */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        /* Título de la sección principal */
+        h1 {
+            color: #ffffff;
+            font-weight: 300;
+        }
+        /* Estilo para cada elemento de tabla existente */
+        .table-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #4f4f4f;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+        .table-item-name {
+            font-weight: bold;
+        }
+        /* Contenedor de botones (para aplicar Flexbox) */
+        .table-actions {
+            display: flex;
+            gap: 10px; /* Espacio entre botones */
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Enlace para volver a la lista de bases de datos -->
+        <a href="/databases" class="btn btn-secondary btn-sm mb-3">← Volver a Bases de Datos</a>
+
+        <!-- CORRECCIÓN: Usar db_name que es la variable pasada por el servidor -->
+        <h1 class="mb-4">Gestión de Tablas en: <%= typeof db_name !== 'undefined' ? db_name : 'Base de Datos Desconocida' %></h1>
+
+        <!-- SECCIÓN 1: CREAR NUEVA TABLA -->
+        <div class="card-dark">
+            <h3 class="h4">Crear Nueva Tabla</h3>
+            <!-- CORRECCIÓN: Agregar un campo oculto con el nombre de la DB para el POST -->
+            <form id="createTableForm" class="mb-4" action="/databases/<%= typeof db_name !== 'undefined' ? db_name : 'undefined_db' %>/create_table" method="POST">
+                <input type="hidden" name="db_name" value="<%= typeof db_name !== 'undefined' ? db_name : '' %>">
+                <div class="mb-3">
+                    <label for="numColumnsInput" class="form-label">Número de columnas</label>
+                    <!-- CORRECCIÓN: Cambiar el id a 'num_columns' y agregar el atributo name para que se envíe en el POST -->
+                    <input type="number" class="form-control w-25" id="num_columns" name="num_columns" value="3" min="1">
+                </div>
+                
+                <div class="mb-3 d-flex gap-2">
+                    <!-- Botón para generar el formulario de columnas -->
+                    <button type="button" class="btn btn-secondary" onclick="generateColumnForm()">
+                        Generar Formulario de Columnas
+                    </button>
+                </div>
+                
+                <!-- Contenedor donde se insertará el formulario de columnas -->
+                <div id="columnFormContainer">
+                    <!-- Aquí se generará el formulario con los campos de columna -->
+                </div>
+
+                <!-- Contenedor del botón "Crear Tabla" (oculto inicialmente) -->
+                <div id="createTableButtonContainer" class="mt-4" style="display:block;">
+                    <button type="submit" class="btn btn-primary">Crear Tabla</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- SECCIÓN 2: TABLAS EXISTENTES -->
+        <h3 class="h4">Tablas Existentes</h3>
+        <div id="existingTablesContainer">
+            
+            <% 
+                // Usamos db_name que es la variable que tu servidor está pasando
+                const currentDbName = typeof db_name !== 'undefined' ? db_name : 'undefined_db';
+            %>
+            <% 
+            // Tu lógica de MongoDB solo genera una entrada en 'tables' si la colección existe, 
+            // y el nombre real de la colección es el mismo que db_name.
+            // Para simplificar, vamos a forzar que solo haya una "tabla" que es la colección misma.
+            // Esto asume que estás simulando solo una "tabla" por "base de datos" simulada.
+            %>
+            
+            <% if (typeof tables !== 'undefined' && tables.length > 0) { 
+                // El nombre de la tabla real en MongoDB es el mismo que db_name en tu lógica
+                const tableName = currentDbName; 
+            %>
+                <div class="table-item">
+                    <span class="table-item-name"><%= tableName %></span>
+                    <div class="table-actions">
+                        <!-- Botón 1: Ver/Agregar Datos -->
+                        <!-- RUTA CORREGIDA: /databases/:db_name/:table_name (Coincide con tu app.get) -->
+                        <a href="/databases/<%= currentDbName %>/<%= tableName %>" class="btn btn-primary btn-sm">Ver/Agregar Datos</a>
+                        
+                        <!-- Botón 2: Editar Estructura (Simulada, usaremos la misma ruta que Ver Datos por ahora) -->
+                        <!-- CAMBIO TEMPORAL: Como no tienes ruta /edit_tables, lo dejamos como # para no fallar, o apuntamos a Ver Datos -->
+                        <a href="/databases/<%= currentDbName %>/<%= tableName %>" class="btn btn-warning btn-sm">Editar Estructura (Ver Datos)</a>
+                        
+                        <!-- Botón 3: Eliminar (Ahora usa un fetch POST/DELETE en JS) -->
+                        <button class="btn btn-danger btn-sm" onclick="confirmDeleteTable('<%= currentDbName %>', '<%= tableName %>')">Eliminar</button>
+                    </div>
+                </div>
+            <% } else if (currentDbName !== 'undefined_db') { %>
+                <p class="text-white-50 mt-3">La colección de datos ('tabla') aún no ha sido creada para: **<%= currentDbName %>**.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Script de lógica de front-end -->
+    <script>
+        // Función para generar campos de formulario
+        function generateColumnForm() {
+            // CORRECCIÓN: Usar 'num_columns' como ID
+            const numColumns = document.getElementById('num_columns').value; 
+            const container = document.getElementById('columnFormContainer');
+            container.innerHTML = ''; 
+            
+            if (numColumns > 0) {
+                document.getElementById('createTableButtonContainer').style.display = 'block';
+
+                for (let i = 0; i < numColumns; i++) { // Iniciar en 0 para que los nombres de las columnas coincidan con el backend
+                    const group = document.createElement('div');
+                    group.className = 'd-flex gap-3 mb-3';
+
+                    // Nombre de la columna
+                    // CORRECCIÓN: Usar el índice 0-based en el nombre del campo
+                    group.innerHTML += `
+                        <input type="text" class="form-control" name="column_name_${i}" placeholder="Nombre Columna ${i+1}" required>
+                    `;
+
+                    // Tipo de dato (Se mantiene, aunque MongoDB es sin esquema, ayuda visualmente)
+                    const selectType = document.createElement('select');
+                    selectType.className = 'form-select';
+                    selectType.name = `column_type_${i}`; // Cambiado a 0-based
+                    selectType.required = true;
+                    selectType.innerHTML = `
+                        <option value="" disabled selected>Tipo de Dato</option>
+                        <option value="INT">INT</option>
+                        <option value="VARCHAR(255)">VARCHAR(255)</option>
+                        <option value="DATE">DATE</option>
+                        <option value="BOOLEAN">BOOLEAN</option>
+                        <option value="FLOAT">FLOAT</option>
+                    `;
+                    group.appendChild(selectType);
+
+                    // Estos campos no son estrictamente necesarios para MongoDB, pero se mantienen
+                    // por si el backend los usa para validación o documentación.
+                    group.innerHTML += `
+                        <div class="form-check form-check-inline align-self-center">
+                            <input class="form-check-input" type="checkbox" name="column_notnull_${i}" id="notNull_${i}" value="NOT NULL">
+                            <label class="form-check-label" for="notNull_${i}">NOT NULL</label>
+                        </div>
+                        <div class="form-check form-check-inline align-self-center">
+                            <input class="form-check-input" type="checkbox" name="column_primarykey_${i}" id="primaryKey_${i}" value="PRIMARY KEY">
+                            <label class="form-check-label" for="primaryKey_${i}">PK</label>
+                        </div>
+                        <div class="form-check form-check-inline align-self-center">
+                            <input class="form-check-input" type="checkbox" name="column_auto_increment_${i}" id="autoIncrement_${i}" value="AUTO_INCREMENT">
+                            <label class="form-check-label" for="autoIncrement_${i}">A.I.</label>
+                        </div>
+                    `;
+
+                    container.appendChild(group);
+                }
+            } else {
+                document.getElementById('createTableButtonContainer').style.display = 'block'; // Mantenemos el botón visible por si el usuario cambia el número a 0
+            }
+        }
+
+        // Función de confirmación de eliminación y envío de solicitud POST
+        function confirmDeleteTable(dbName, tableName) {
+            if (window.confirm(`¿Estás seguro de que deseas eliminar la colección '${tableName}' en la base de datos simulada '${dbName}'? Esto eliminará todos los documentos.`)) {
+                
+                // Construir la URL de eliminación
+                const url = `/delete_table/${dbName}/${tableName}`; // Coincide con tu ruta app.post('/delete_table/:db_name/:table_name')
+
+                // Enviar la solicitud POST
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    // No necesitamos enviar cuerpo, los datos van en la URL
+                })
+                .then(response => {
+                    // Si el servidor responde correctamente (redirección 302/200 OK)
+                    if (response.ok || response.status === 302) {
+                        // Redirigir al usuario a la página de bases de datos para actualizar la lista
+                        window.location.href = `/databases/${dbName}`; 
+                    } else {
+                        // Manejo de errores
+                        alert(`Error al intentar eliminar la colección ${tableName}: ${response.statusText}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error en la solicitud de eliminación:', error);
+                    alert('Error de red o del servidor al eliminar la colección.');
+                });
+            }
+        }
+        
+        // Inicializar el formulario al cargar la página 
+        document.addEventListener('DOMContentLoaded', function() {
+             // Generamos el formulario inicial al cargar la página
+             generateColumnForm(); 
+        });
+    </script>
+
+    <!-- Asumo que tienes un archivo footer.ejs -->
+    <%- include('footer.ejs') %>
+</body>
+</html>

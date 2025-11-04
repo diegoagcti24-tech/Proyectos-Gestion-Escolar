@@ -1,0 +1,85 @@
+<%- include('header.ejs') %>  <main class="flex-grow-1">
+    <div class="container mt-5">
+        
+                <h1 class="mb-4">Editar Tabla: <span class="text-info"><%= table_name %></span></h1>
+
+                <p>En la Base de Datos: <span class="text-info"><%= db_name %></span></p>
+
+                <p><a href="/databases/<%= db_name %>" class="btn btn-secondary">← Volver a Tablas</a></p>
+
+                <div class="card mb-4">
+            <div class="card-header">
+                Renombrar Tabla y Eliminar Columnas
+            </div>
+            <div class="card-body">
+                                <form action="/databases/<%= db_name %>/<%= table_name %>/edit" method="post">
+                    
+                                        <div class="mb-3">
+                        <label for="new_table_name" class="form-label">Renombrar tabla</label>
+                        <input type="text" class="form-control" id="new_table_name" name="new_table_name" value="<%= table_name %>">
+                    </div>
+
+                                        <div class="mb-3">
+                        <label class="form-label text-white">Eliminar columnas</label>
+                        <small class="form-text text-white d-block mb-2">
+                            Selecciona las columnas que deseas eliminar. <strong>Esto no se puede deshacer.</strong>
+                        </small>
+                        
+                                                <% columns.forEach(function([column_name, column_type]) { %>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="columns_to_drop" value="<%= column_name %>" id="check-<%= column_name %>">
+                                <label class="form-check-label text-white" for="check-<%= column_name %>">
+                                    <%= column_name %> (<%= column_type %>)
+                                </label>
+                            </div>
+                        <% }); %>
+                    </div>
+                    
+                                        <button type="submit" class="btn btn-warning mt-3" onclick="return confirm('¿Estás seguro de que deseas aplicar estos cambios? Esto podría resultar en pérdida de datos.')">
+                        Aplicar Cambios
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+                <div class="card mb-4">
+            <div class="card-header">
+                Agregar Nueva Columna
+            </div>
+            <div class="card-body">
+                                <form action="/databases/<%= db_name %>/<%= table_name %>/add_column" method="post">
+                    <div class="row">
+                                                <div class="col-md-5">
+                            <label for="new_column_name" class="form-label text-white">Nombre de columna</label>
+                            <input type="text" class="form-control" id="new_column_name" name="new_column_name" required>
+                        </div>
+
+                                                <div class="col-md-5">
+                            <label for="new_column_type" class="form-label text-white">Tipo de dato</label>
+                            <select class="form-select" id="new_column_type" name="new_column_type">
+                                <option value="INT">INT</option>
+                                <option value="VARCHAR(255)">VARCHAR(255)</option>
+                                <option value="DATE">DATE</option>
+                                <option value="TEXT">TEXT</option>
+                                <option value="BOOLEAN">BOOLEAN</option>
+                                <option value="FLOAT">FLOAT</option>
+                            </select>
+                        </div>
+
+                                                <div class="col-md-2 d-flex align-items-end">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="new_column_nullable" value="NULL" id="new_column_nullable">
+                                <label class="form-check-label text-white" for="new_column_nullable">Permitir Nulo</label>
+                            </div>
+                        </div>
+                    </div>
+
+                                        <button type="submit" class="btn btn-primary mt-3">Agregar Columna</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<%- include('footer.ejs') %>  ```

@@ -1,0 +1,91 @@
+/* Estilos generales para el cuerpo de la página */
+body {
+    background-color: #282e39; /* Turquesa oscuro */
+    color: #f8f9fa; /* Color de texto claro por defecto para el resto de la app (ej. tablas, cards) */
+    font-family: 'Inter', sans-serif;
+}
+
+/* Ajustes para elementos de Bootstrap si es necesario para el contraste */
+.container, .card {
+    background-color: rgba(255, 255, 255, 0.1); /* Un fondo ligeramente transparente para los contenedores */
+    color: #f8f9fa; /* Asegura que el texto dentro de ellos sea claro */
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.card-header {
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    color: #f8f9fa !important;
+}
+
+.table {
+    color: #f8f9fa;
+}
+
+.table-dark thead th {
+    background-color: #38292d;
+    border-color: #38292d;
+}
+
+.alert {
+    color: #000;
+    background-color: #e2e3e5;
+    border-color: #d3d6db;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #38292d;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+/* ESTILOS DE BOTONES PERSONALIZADOS */
+.btn-azul-rey {
+    background-color: #2b2736; /* Azul Rey */
+    border-color: #2b2736;
+    color: #FFFFFF; /* Texto blanco para contraste */
+}
+
+.btn-azul-rey:hover {
+    background-color: #2b2736; /* Un tono más oscuro para el hover */
+    border-color: #2b2736;
+}
+
+.btn-naranja {
+    background-color: #38292d; /* Naranja */
+    border-color: #38292d;
+    color: #FFFFFF; /* Texto blanco para contraste */
+}
+
+.btn-naranja:hover {
+    background-color: #38292d; /* Un tono más oscuro para el hover */
+    border-color: #38292d;
+}
+
+/* Estilos para el texto de la página de inicio (index.html) */
+.container.my-5 h2,
+.container.my-5 h3,
+.container.my-5 p,
+.container.my-5 ul li {
+    color: #FFFFFF; /* Blanco para el mejor contraste en fondo oscuro */
+}
+
+.container.my-5 ul li strong {
+    color: #FFFFFF;}
